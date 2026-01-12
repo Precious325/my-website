@@ -4,8 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tech Fest Registration</title>
-    <!-- Include QR Code library -->
-    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
     <style>
         /* --- CSS VARIABLES & RESET --- */
         :root {
@@ -282,83 +280,308 @@
 
     <form id="participant-training" class="form-wrapper" onsubmit="handleSubmit(event, 'ticket')">
         <h3>Personal Information</h3>
-        <div class="form-group"><label>Full Name</label><input type="text" id="training-name" required></div>
-        <div class="form-group"><label>Date of Birth</label><input type="date" id="training-dob" required></div>
-        <div class="form-group"><label>Level of Education</label><input type="text" id="training-education" required></div>
-            <div class="form-group">
-        <label>Select Training Track</label>
-        <select required>
-            <option value="">-- Choose a track --</option>
-            <option value="web">Web Development</option>
-            <option value="ai">Artificial Intelligence</option>
-            <option value="cyber">Cybersecurity</option>
-        </select>
-    </div>
-    <button type="submit" class="submit-btn">Register & Get Ticket</button>
-</form>
+        <div class="form-group"><label>Full Name</label><input type="text" required></div>
+        <div class="form-group"><label>Date of Birth</label><input type="date" required></div>
+        <div class="form-group"><label>Level of Education</label><input type="text" required></div>
+        <div class="form-group"><label>Institution / Workplace</label><input type="text" required></div>
+        <div class="form-group"><label>Address</label><input type="text" required></div>
+        <div class="form-group"><label>Phone Number</label><input type="tel" required></div>
+        <div class="form-group"><label>Email Address</label><input type="email" required></div>
 
-<div class="modal-overlay" id="modalOverlay">
+        <h3>Training & Participation Details</h3>
+        <div class="form-group">
+            <label>Most convenient location</label>
+            <input type="text" placeholder="City/Region" required>
+        </div>
+        <div class="form-group">
+            <label>Primary Area of Focus</label>
+            <select required>
+                <option value="" disabled selected>Select an option</option>
+                <option>Back-end Developer</option>
+                <option>Front-end Developer</option>
+                <option>Project Manager</option>
+                <option>UI Designer</option>
+                <option>Graphic Designer</option>
+                <option>Content Creator</option>
+                <option>Video Editor</option>
+                <option>Database Designer</option>
+                <option>AI/ML</option>
+                <option>Unsure</option>
+                <option>Other</option>
+            </select>
+        </div>
+
+        <h3>Skills & Experience</h3>
+        <div class="form-group"><label>What skills do you expect to gain?</label><textarea required></textarea></div>
+        <div class="form-group"><label>What skills can you contribute?</label><textarea required></textarea></div>
+        
+        <div class="checkbox-group">
+            <label class="checkbox-item"><input type="checkbox" required> Willing to work with random teammates?</label>
+            <label class="checkbox-item"><input type="checkbox"> Do you have a product/prototype?</label>
+            <label class="checkbox-item"><input type="checkbox"> Intend to use skills to improve prototype?</label>
+        </div>
+        <div class="form-group" style="margin-top: 15px;"><label>If yes, how?</label><input type="text"></div>
+        <div class="form-group"><label>Social Media Links</label><input type="text" placeholder="LinkedIn, GitHub, etc."></div>
+
+        <button type="submit" class="submit-btn">Register for Training & Fest</button>
+    </form>
+
+    <form id="participant-fest" class="form-wrapper" onsubmit="handleSubmit(event, 'ticket')">
+        <h3>Personal Information</h3>
+        <div class="form-group"><label>Full Name</label><input type="text" required></div>
+        <div class="form-group"><label>Date of Birth</label><input type="date" required></div>
+        <div class="form-group"><label>Phone Number</label><input type="tel" required></div>
+        <div class="form-group"><label>Email</label><input type="email" required></div>
+        <div class="form-group"><label>Address</label><input type="text" required></div>
+
+        <h3>Event Details</h3>
+        <div class="form-group">
+            <label>Why do you want to participate?</label>
+            <select required>
+                <option>Because it seems fun</option>
+                <option>Saw flyers</option>
+                <option>I don't know</option>
+                <option>Other</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>How did you find us?</label>
+            <select required>
+                <option>Flyer</option>
+                <option>LinkedIn</option>
+                <option>WhatsApp</option>
+                <option>Word of Mouth</option>
+                <option>Other</option>
+            </select>
+        </div>
+        <div class="form-group"><label>Expectations?</label><textarea required></textarea></div>
+        
+        <div class="checkbox-group">
+            <label class="checkbox-item"><input type="checkbox"> Do you know about DIRA?</label>
+            <label class="checkbox-item"><input type="checkbox"> Do you use DIRA products?</label>
+            <label class="checkbox-item"><input type="checkbox"> Willing to test DIRA products?</label>
+        </div>
+        
+        <button type="submit" class="submit-btn">Get Fest Ticket</button>
+    </form>
+
+    <form id="vendor" class="form-wrapper" onsubmit="handleSubmit(event, 'review')">
+        <h3>Vendor Information</h3>
+        <div class="form-group"><label>Full Name</label><input type="text" required></div>
+        <div class="form-group"><label>Business Name</label><input type="text" required></div>
+        <div class="form-group"><label>Location</label><input type="text" required></div>
+        <div class="form-group"><label>Email</label><input type="email" required></div>
+        <div class="form-group"><label>Phone Number</label><input type="tel" required></div>
+
+        <h3>Business Details</h3>
+        <div class="form-group"><label>Main Aim of Business</label><textarea required></textarea></div>
+        <div class="form-group"><label>How will this event benefit you?</label><textarea required></textarea></div>
+        <div class="checkbox-group">
+            <label class="checkbox-item"><input type="checkbox"> Currently making profit?</label>
+            <label class="checkbox-item"><input type="checkbox"> Use DIRA products?</label>
+        </div>
+        <div class="form-group" style="margin-top: 15px;"><label>Social Media Links</label><input type="text"></div>
+
+        <button type="submit" class="submit-btn">Apply as Vendor</button>
+    </form>
+
+    <form id="speaker" class="form-wrapper" onsubmit="handleSubmit(event, 'review')">
+        <h3>Speaker Profile</h3>
+        <div class="form-group"><label>Full Name</label><input type="text" required></div>
+        <div class="form-group"><label>Email</label><input type="email" required></div>
+        <div class="form-group"><label>Phone</label><input type="tel" required></div>
+        <div class="form-group"><label>LinkedIn Profile</label><input type="text" required></div>
+        
+        <div class="form-group">
+            <label>Upload CV (Optional)</label>
+            <div class="file-upload-wrapper" onclick="document.getElementById('speaker-cv').click()">
+                <span>Click to Upload CV</span>
+                <input type="file" id="speaker-cv" onchange="displayFileName(this)">
+                <div class="file-name-display"></div>
+            </div>
+        </div>
+
+        <h3>Expertise & Presentation</h3>
+        <div class="form-group"><label>Area of Expertise</label><input type="text" required></div>
+        <div class="form-group">
+            <label>Theme Choice</label>
+            <select required>
+                <option>Inclusivity in Tech</option>
+                <option>Tech for All</option>
+                <option>Rapid Deployment</option>
+                <option>Teamwork</option>
+                <option>Empowerment</option>
+                <option>Other (Specify below)</option>
+            </select>
+        </div>
+        <div class="form-group"><label>If other, specify / Explanation</label><textarea required></textarea></div>
+        
+        <div class="checkbox-group">
+            <label class="checkbox-item"><input type="checkbox"> Open to mentoring?</label>
+            <label class="checkbox-item"><input type="radio" name="spk-avail"> Speak at Fest Only</label>
+            <label class="checkbox-item"><input type="radio" name="spk-avail"> Speak during Training</label>
+        </div>
+
+        <button type="submit" class="submit-btn">Submit Speaker Application</button>
+    </form>
+
+    <form id="trainer" class="form-wrapper" onsubmit="handleSubmit(event, 'review')">
+        <h3>Trainer Profile</h3>
+        <div class="form-group"><label>Full Name</label><input type="text" required></div>
+        <div class="form-group"><label>Email</label><input type="email" required></div>
+        <div class="form-group"><label>Phone</label><input type="tel" required></div>
+        <div class="form-group"><label>LinkedIn Profile</label><input type="text" required></div>
+
+        <div class="form-group">
+            <label>Upload CV</label>
+            <div class="file-upload-wrapper" onclick="document.getElementById('trainer-cv').click()">
+                <span>Click to Upload CV</span>
+                <input type="file" id="trainer-cv" required onchange="displayFileName(this)">
+                <div class="file-name-display"></div>
+            </div>
+        </div>
+
+        <h3>Expertise (Select All)</h3>
+        <div class="checkbox-group">
+            <label class="checkbox-item"><input type="checkbox"> Front-end Dev</label>
+            <label class="checkbox-item"><input type="checkbox"> Back-end Dev</label>
+            <label class="checkbox-item"><input type="checkbox"> UI/UX Design</label>
+            <label class="checkbox-item"><input type="checkbox"> AI/ML</label>
+            <label class="checkbox-item"><input type="checkbox"> Project Management</label>
+            <label class="checkbox-item"><input type="checkbox"> Cyber Security</label>
+        </div>
+
+        <div class="form-group" style="margin-top: 20px;">
+            <label>Upload Curriculum (if available)</label>
+            <div class="file-upload-wrapper" onclick="document.getElementById('curr').click()">
+                <span>Click to Upload Curriculum</span>
+                <input type="file" id="curr" onchange="displayFileName(this)">
+                <div class="file-name-display"></div>
+            </div>
+        </div>
+
+        <div class="form-group"><label>What do you aim to gain?</label><textarea required></textarea></div>
+        <div class="checkbox-group">
+            <label class="checkbox-item"><input type="checkbox" required> Willing to collaborate with other trainers?</label>
+        </div>
+
+        <button type="submit" class="submit-btn">Submit Trainer Application</button>
+    </form>
+</div>
+
+<div class="modal-overlay" id="modal-ticket">
     <div class="modal-content">
-        <div class="status-icon">✅</div>
-        <h2 id="modalTitle">Registration Successful!</h2>
-        <p>Your Seat Number:</p>
-        <div class="seat-number" id="displaySeat">---</div>
-        <canvas id="qrcode" class="qr-code"></canvas>
-        <p class="helper-text">Please save this QR code for entry.</p>
-        <button class="close-modal" onclick="closeModal()">Close</button>
+        <div class="status-icon">🎉</div>
+        <h2 style="color: var(--text-color); margin-bottom: 10px;">Registration Successful!</h2>
+        <p style="color: var(--text-muted);">See you at DIRA Tech Fest.</p>
+        
+        <div class="seat-number">SEAT #<span id="seat-gen">000</span></div>
+        <img src="" alt="QR Code" class="qr-code" id="qr-gen">
+        
+        <p class="helper-text">Please save this QR code.</p>
+        <button class="close-modal" onclick="closeModal('modal-ticket')">Close</button>
+    </div>
+</div>
+
+<div class="modal-overlay" id="modal-ticket">
+    <div class="modal-content">
+        <div class="status-icon">🎉</div>
+        <h2 style="color: var(--text-color); margin-bottom: 10px;">Registration Successful!</h2>
+        <p style="color: var(--text-muted);">See you at DIRA Tech Fest.</p>
+        
+        <div class="seat-number">SEAT #<span id="seat-gen">000</span></div>
+        
+        <div style="min-height: 150px; display: flex; align-items: center; justify-content: center;">
+            <img src="" alt="QR Code" class="qr-code" id="qr-gen" style="display: none;">
+            <div id="qr-loading" style="font-size: 0.8rem; color: #888;">Generating QR...</div>
+        </div>
+        
+        <p class="helper-text">Please save this QR code.</p>
+        <button class="close-modal" onclick="closeModal('modal-ticket')">Close</button>
     </div>
 </div>
 
 <script>
-    // 1. Toggle Form Visibility
+    // 1. Initialize the page by showing the first form automatically
+    window.onload = () => {
+        const firstBtn = document.querySelector('.category-btn');
+        if(firstBtn) firstBtn.click();
+    };
+
     function showForm(formId) {
-        document.querySelectorAll('.form-wrapper').forEach(form => {
+        const forms = document.querySelectorAll('.form-wrapper');
+        forms.forEach(form => {
             form.classList.remove('visible');
-            form.style.display = 'none';
+            form.style.display = 'none'; 
         });
-        document.querySelectorAll('.category-btn').forEach(btn => btn.classList.remove('active'));
+
+        const buttons = document.querySelectorAll('.category-btn');
+        buttons.forEach(btn => btn.classList.remove('active'));
         
-        const selectedForm = document.getElementById(formId);
-        if(selectedForm) {
-            selectedForm.style.display = 'block';
-            setTimeout(() => selectedForm.classList.add('visible'), 10);
-            event.currentTarget.classList.add('active');
+        // Highlight active button
+        if(event && event.target) event.target.classList.add('active');
+
+        const targetForm = document.getElementById(formId);
+        if(targetForm) {
+            targetForm.style.display = 'block';
+            setTimeout(() => targetForm.classList.add('visible'), 10);
         }
     }
 
-    // 2. Handle Form Submission
-    async function handleSubmit(event, type) {
-        event.preventDefault();
-        
-        // Generate Random Seat Number (e.g., TF-1024)
-        const seatNum = "TF-" + Math.floor(1000 + Math.random() * 9000);
-        document.getElementById('displaySeat').innerText = seatNum;
-
-        // Generate QR Code
-        const qrCanvas = document.getElementById('qrcode');
-        const qrData = `Ticket: ${seatNum} | Name: ${document.getElementById('training-name').value}`;
-        
-        try {
-            await QRCode.toCanvas(qrCanvas, qrData, {
-                width: 150,
-                margin: 2,
-                color: { dark: '#6a11cb', light: '#ffffff' }
-            });
-            
-            // Show Modal
-            document.getElementById('modalOverlay').classList.add('active');
-        } catch (err) {
-            console.error(err);
-            alert("Error generating QR Code");
+    function displayFileName(input) {
+        const display = input.parentNode.querySelector('.file-name-display');
+        if (input.files && input.files[0]) {
+            display.textContent = "Selected: " + input.files[0].name;
         }
     }
 
-    function closeModal() {
-        document.getElementById('modalOverlay').classList.remove('active');
+    function handleSubmit(e, type) {
+        e.preventDefault();
+        
+        const btn = e.target.querySelector('button[type="submit"]');
+        const originalText = btn.textContent;
+        btn.textContent = "Processing...";
+        btn.disabled = true;
+
+        setTimeout(() => {
+            btn.textContent = originalText;
+            btn.disabled = false;
+
+            if (type === 'ticket') {
+                const seat = Math.floor(Math.random() * 500) + 1;
+                const name = e.target.querySelector('input[type="text"]').value;
+                document.getElementById('seat-gen').textContent = seat;
+                
+                // Fix: Improved QR API call with encoded data
+                const qrImg = document.getElementById('qr-gen');
+                const loader = document.getElementById('qr-loading');
+                const qrData = encodeURIComponent(`DIRA-FEST-2026|SEAT-${seat}|${name}`);
+                
+                qrImg.style.display = 'none';
+                loader.style.display = 'block';
+                
+                qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${qrData}`;
+                
+                // Show image once it has fully loaded
+                qrImg.onload = function() {
+                    loader.style.display = 'none';
+                    qrImg.style.display = 'block';
+                };
+
+                openModal('modal-ticket');
+            } else {
+                openModal('modal-review');
+            }
+        }, 1000); 
     }
 
-    // Initialize the first form view
-    showForm('participant-training');
+    function openModal(id) {
+        document.getElementById(id).classList.add('active');
+    }
+
+    function closeModal(id) {
+        document.getElementById(id).classList.remove('active');
+    }
 </script>
 
 </body>
