@@ -285,62 +285,81 @@
         <div class="form-group"><label>Full Name</label><input type="text" id="training-name" required></div>
         <div class="form-group"><label>Date of Birth</label><input type="date" id="training-dob" required></div>
         <div class="form-group"><label>Level of Education</label><input type="text" id="training-education" required></div>
-        <div class="form-group"><label>Institution / Workplace</label><input type="text" id="training-institution" required></div>
-        <div class="form-group"><label>Address</label><input type="text" id="training-address" required></div>
-        <div class="form-group"><label>Phone Number</label><input type="tel" id="training-phone" required></div>
-        <div class="form-group"><label>Email Address</label><input type="email" id="training-email" required></div>
+            <div class="form-group">
+        <label>Select Training Track</label>
+        <select required>
+            <option value="">-- Choose a track --</option>
+            <option value="web">Web Development</option>
+            <option value="ai">Artificial Intelligence</option>
+            <option value="cyber">Cybersecurity</option>
+        </select>
+    </div>
+    <button type="submit" class="submit-btn">Register & Get Ticket</button>
+</form>
 
-        <h3>Training & Participation Details</h3>
-        <div class="form-group">
-            <label>Most convenient location</label>
-            <input type="text" id="training-location" placeholder="City/Region" required>
-        </div>
-        <div class="form-group">
-            <label>Primary Area of Focus</label>
-            <select id="training-focus" required>
-                <option value="" disabled selected>Select an option</option>
-                <option>Back-end Developer</option>
-                <option>Front-end Developer</option>
-                <option>Project Manager</option>
-                <option>UI Designer</option>
-                <option>Graphic Designer</option>
-                <option>Content Creator</option>
-                <option>Video Editor</option>
-                <option>Database Designer</option>
-                <option>AI/ML</option>
-                <option>Unsure</option>
-                <option>Other</option>
-            </select>
-        </div>
+<div class="modal-overlay" id="modalOverlay">
+    <div class="modal-content">
+        <div class="status-icon">✅</div>
+        <h2 id="modalTitle">Registration Successful!</h2>
+        <p>Your Seat Number:</p>
+        <div class="seat-number" id="displaySeat">---</div>
+        <canvas id="qrcode" class="qr-code"></canvas>
+        <p class="helper-text">Please save this QR code for entry.</p>
+        <button class="close-modal" onclick="closeModal()">Close</button>
+    </div>
+</div>
 
-        <h3>Skills & Experience</h3>
-        <div class="form-group"><label>What skills do you expect to gain?</label><textarea id="training-skills-gain" required></textarea></div>
-        <div class="form-group"><label>What skills can you contribute?</label><textarea id="training-skills-contribute" required></textarea></div>
+<script>
+    // 1. Toggle Form Visibility
+    function showForm(formId) {
+        document.querySelectorAll('.form-wrapper').forEach(form => {
+            form.classList.remove('visible');
+            form.style.display = 'none';
+        });
+        document.querySelectorAll('.category-btn').forEach(btn => btn.classList.remove('active'));
         
-        <div class="checkbox-group">
-            <label class="checkbox-item"><input type="checkbox" id="training-teamwork" required> Willing to work with random teammates?</label>
-            <label class="checkbox-item"><input type="checkbox" id="training-prototype"> Do you have a product/prototype?</label>
-            <label class="checkbox-item"><input type="checkbox" id="training-improve"> Intend to use skills to improve prototype?</label>
-        </div>
-        <div class="form-group" style="margin-top: 15px;"><label>If yes, how?</label><input type="text" id="training-how"></div>
-        <div class="form-group"><label>Social Media Links</label><input type="text" id="training-social" placeholder="LinkedIn, GitHub, etc."></div>
+        const selectedForm = document.getElementById(formId);
+        if(selectedForm) {
+            selectedForm.style.display = 'block';
+            setTimeout(() => selectedForm.classList.add('visible'), 10);
+            event.currentTarget.classList.add('active');
+        }
+    }
 
-        <button type="submit" class="submit-btn">Register for Training & Fest</button>
-    </form>
+    // 2. Handle Form Submission
+    async function handleSubmit(event, type) {
+        event.preventDefault();
+        
+        // Generate Random Seat Number (e.g., TF-1024)
+        const seatNum = "TF-" + Math.floor(1000 + Math.random() * 9000);
+        document.getElementById('displaySeat').innerText = seatNum;
 
-    <form id="participant-fest" class="form-wrapper" onsubmit="handleSubmit(event, 'ticket')">
-        <h3>Personal Information</h3>
-        <div class="form-group"><label>Full Name</label><input type="text" id="fest-name" required></div>
-        <div class="form-group"><label>Date of Birth</label><input type="date" id="fest-dob" required></div>
-        <div class="form-group"><label>Phone Number</label><input type="tel" id="fest-phone" required></div>
-        <div class="form-group"><label>Email</label><input type="email" id="fest-email" required></div>
-        <div class="form-group"><label>Address</label><input type="text" id="fest-address" required></div>
+        // Generate QR Code
+        const qrCanvas = document.getElementById('qrcode');
+        const qrData = `Ticket: ${seatNum} | Name: ${document.getElementById('training-name').value}`;
+        
+        try {
+            await QRCode.toCanvas(qrCanvas, qrData, {
+                width: 150,
+                margin: 2,
+                color: { dark: '#6a11cb', light: '#ffffff' }
+            });
+            
+            // Show Modal
+            document.getElementById('modalOverlay').classList.add('active');
+        } catch (err) {
+            console.error(err);
+            alert("Error generating QR Code");
+        }
+    }
 
-        <h3>Event Details</h3>
-        <div class="form-group">
-            <label>Why do you want to participate?</label>
-         <select id="fest-why" required>
-                <option>Because it seems fun</option>
-                <option>Saw flyers</option>
-                <option>I don't know</option>
-                <option>Other</option>
+    function closeModal() {
+        document.getElementById('modalOverlay').classList.remove('active');
+    }
+
+    // Initialize the first form view
+    showForm('participant-training');
+</script>
+
+</body>
+</html>
