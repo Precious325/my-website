@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tech Fest Registration</title>
+    <!-- Include QR Code library -->
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+    <style>
+        /* --- CSS VARIABLES & RESET --- */
+        :root {
+            /* User Provided Colors */
+            --primary-color: #6a11cb;
+            --secondary-color: #2575fc;
+            --card-bg: white;
+            --text-color: #333;
+            --input-border-color: #ddd;
+            --gradient-start: #8a2be2; /* Blue-Violet */
+            --gradient-end: #ff69b4;   /* Hot Pink */
+
+            /* Derived/Helper Variables */
+            --body-bg: #f4f7fa; /* Light clean background to make the card pop */
+            --text-muted: #666;
+            --input-bg: #f9f9f9;
+            --radius: 12px;
+            --transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            --main-gradient: linear-gradient(135deg, var(--gradient-start) 0%, var(--gradient-end) 100%);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', system-ui, -apple-system, sans-serif; }
+        
+        body {
+            background-color: var(--body-bg);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            padding: 40px 20px;
+            /* Optional subtle pattern or gradient for the main background */
+            background-image: radial-gradient(circle at 10% 20%, rgba(37, 117, 252, 0.05) 0%, transparent 20%);
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+        }
+
+        /* --- HEADER & CATEGORY SELECTION --- */
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            animation: fadeInDown 0.8s ease;
+        }
+
+        h1 { 
+            font-size: 2.8rem; 
+            font-weight: 800; 
+            margin-bottom: 10px; 
+            background: var(--main-gradient); 
+            -webkit-background-clip: text; 
+            -webkit-text-fill-color: transparent; 
+            letter-spacing: -1px;
+        }
+        
+        h2 { font-size: 1.2rem; color: var(--text-muted); font-weight: 500; margin-bottom: 30px; }
+
+        .category-selector {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+
+        .category-btn {
+            background: var(--card-bg);
+            border: 1px solid var(--input-border-color);
+            color: var(--text-muted);
+            padding: 12px 24px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 0.95rem;
+            font-weight: 600;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .category-btn:hover { 
+            border-color: var(--gradient-start); 
+            color: var(--gradient-start); 
+            transform: translateY(-2px);
+        }
+        
+        .category-btn.active {
+            background: var(--main-gradient);
+            color: white;
+            border-color: transparent;
+            box-shadow: 0 8px 20px rgba(138, 43, 226, 0.3);
+            transform: translateY(-2px);
+        }
+
+        /* --- FORM STRUCTURE --- */
+        .form-wrapper {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 45px;
+            border: 1px solid white; /* clean border */
+            box-shadow: 0 15px 40px rgba(0,0,0,0.08); /* Soft shadow */
+            position: relative;
+            overflow: hidden;
+            display: none; 
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .form-wrapper.visible {
+            display: block;
+            animation: popDown 0.6s forwards;
+        }
+
+        @keyframes popDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h3 {
+            font-size: 1.4rem;
+            margin-bottom: 25px;
+            color: var(--primary-color);
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 10px;
+            margin-top: 30px;
+        }
+        h3:first-child { margin-top: 0; }
+
+        /* --- INPUTS & LABELS --- */
+        .form-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; font-size: 0.9rem; color: #555; font-weight: 500; }
+        
+        input[type="text"], input[type="email"], input[type="date"], input[type="tel"], textarea, select {
+            width: 100%;
+            padding: 14px 16px;
+            background: var(--input-bg);
+            border: 1px solid var(--input-border-color);
+            border-radius: 8px;
+            color: var(--text-color);
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: var(--secondary-color);
+            background: white;
+            box-shadow: 0 0 0 4px rgba(37, 117, 252, 0.1);
+        }
+
+        textarea { resize: vertical; min-height: 100px; }
+
+        /* Checkboxes & Radios Customization */
+        .checkbox-group { display: flex; flex-direction: column; gap: 12px; }
+        .checkbox-item { display: flex; align-items: center; gap: 10px; cursor: pointer; color: #444; }
+        input[type="checkbox"], input[type="radio"] { 
+            accent-color: var(--gradient-start); 
+            width: 18px; height: 18px; cursor: pointer;
+        }
+
+        /* --- FILE UPLOAD --- */
+        .file-upload-wrapper {
+            position: relative;
+            border: 2px dashed var(--input-border-color);
+            border-radius: 8px;
+            padding: 30px;
+            text-align: center;
+            transition: var(--transition);
+            cursor: pointer;
+            background: #fafafa;
+        }
+        .file-upload-wrapper:hover { 
+            border-color: var(--secondary-color); 
+            background: rgba(37, 117, 252, 0.03); 
+        }
+        .file-upload-wrapper input[type="file"] {
+            position: absolute; width: 100%; height: 100%; top: 0; left: 0; opacity: 0; cursor: pointer;
+        }
+        .file-name-display { margin-top: 10px; font-size: 0.9rem; color: var(--primary-color); font-weight: bold; }
+
+        /* --- SUBMIT BUTTON --- */
+        .submit-btn {
+            width: 100%;
+            padding: 16px;
+            margin-top: 30px;
+            background: var(--main-gradient);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: 0 4px 15px rgba(138, 43, 226, 0.3);
+        }
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(138, 43, 226, 0.4);
+        }
+
+        /* --- SUCCESS MODAL --- */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6); /* Slightly darker for contrast against white modal */
+            backdrop-filter: blur(5px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .modal-overlay.active { display: flex; opacity: 1; }
+
+        .modal-content {
+            background: var(--card-bg);
+            padding: 40px;
+            border-radius: 20px;
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+            transform: scale(0.8);
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .modal-overlay.active .modal-content { transform: scale(1); }
+
+        .qr-code { width: 150px; height: 150px; margin: 20px auto; border-radius: 8px; border: 1px solid #eee; padding: 5px; }
+        .seat-number { font-size: 2rem; font-weight: 800; color: var(--primary-color); margin: 10px 0; }
+        .status-icon { font-size: 4rem; margin-bottom: 20px; }
+        
+        .close-modal { 
+            margin-top: 20px; 
+            background: transparent; 
+            border: 2px solid var(--input-border-color); 
+            color: var(--text-muted); 
+            padding: 10px 30px; 
+            border-radius: 30px; 
+            cursor: pointer; 
+            font-weight: 600;
+            transition: 0.3s; 
+        }
+        .close-modal:hover { 
+            border-color: var(--secondary-color); 
+            color: var(--secondary-color); 
+            background: white;
+        }
+
+        /* Animation for helper text */
+        .helper-text { font-size: 0.8rem; color: #888; margin-top: 5px; }
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>TECH FEST</h1>
+        <h2>Registration & Application</h2>
+        
+        <div class="category-selector">
+            <button class="category-btn" onclick="showForm('participant-training')">Participant (Training & Fest)</button>
+            <button class="category-btn" onclick="showForm('participant-fest')">Participant (Fest Only)</button>
+            <button class="category-btn" onclick="showForm('vendor')">Vendor</button>
+            <button class="category-btn" onclick="showForm('speaker')">Speaker</button>
+            <button class="category-btn" onclick="showForm('trainer')">Trainer</button>
+        </div>
+    </header>
+
+    <form id="participant-training" class="form-wrapper" onsubmit="handleSubmit(event, 'ticket')">
+        <h3>Personal Information</h3>
+        <div class="form-group"><label>Full Name</label><input type="text" id="training-name" required></div>
+        <div class="form-group"><label>Date of Birth</label><input type="date" id="training-dob" required></div>
+        <div class="form-group"><label>Level of Education</label><input type="text" id="training-education" required></div>
+        <div class="form-group"><label>Institution / Workplace</label><input type="text" id="training-institution" required></div>
+        <div class="form-group"><label>Address</label><input type="text" id="training-address" required></div>
+        <div class="form-group"><label>Phone Number</label><input type="tel" id="training-phone" required></div>
+        <div class="form-group"><label>Email Address</label><input type="email" id="training-email" required></div>
+
+        <h3>Training & Participation Details</h3>
+        <div class="form-group">
+            <label>Most convenient location</label>
+            <input type="text" id="training-location" placeholder="City/Region" required>
+        </div>
+        <div class="form-group">
+            <label>Primary Area of Focus</label>
+            <select id="training-focus" required>
+                <option value="" disabled selected>Select an option</option>
+                <option>Back-end Developer</option>
+                <option>Front-end Developer</option>
+                <option>Project Manager</option>
+                <option>UI Designer</option>
+                <option>Graphic Designer</option>
+                <option>Content Creator</option>
+                <option>Video Editor</option>
+                <option>Database Designer</option>
+                <option>AI/ML</option>
+                <option>Unsure</option>
+                <option>Other</option>
+            </select>
+        </div>
+
+        <h3>Skills & Experience</h3>
+        <div class="form-group"><label>What skills do you expect to gain?</label><textarea id="training-skills-gain" required></textarea></div>
+        <div class="form-group"><label>What skills can you contribute?</label><textarea id="training-skills-contribute" required></textarea></div>
+        
+        <div class="checkbox-group">
+            <label class="checkbox-item"><input type="checkbox" id="training-teamwork" required> Willing to work with random teammates?</label>
+            <label class="checkbox-item"><input type="checkbox" id="training-prototype"> Do you have a product/prototype?</label>
+            <label class="checkbox-item"><input type="checkbox" id="training-improve"> Intend to use skills to improve prototype?</label>
+        </div>
+        <div class="form-group" style="margin-top: 15px;"><label>If yes, how?</label><input type="text" id="training-how"></div>
+        <div class="form-group"><label>Social Media Links</label><input type="text" id="training-social" placeholder="LinkedIn, GitHub, etc."></div>
+
+        <button type="submit" class="submit-btn">Register for Training & Fest</button>
+    </form>
+
+    <form id="participant-fest" class="form-wrapper" onsubmit="handleSubmit(event, 'ticket')">
+        <h3>Personal Information</h3>
+        <div class="form-group"><label>Full Name</label><input type="text" id="fest-name" required></div>
+        <div class="form-group"><label>Date of Birth</label><input type="date" id="fest-dob" required></div>
+        <div class="form-group"><label>Phone Number</label><input type="tel" id="fest-phone" required></div>
+        <div class="form-group"><label>Email</label><input type="email" id="fest-email" required></div>
+        <div class="form-group"><label>Address</label><input type="text" id="fest-address" required></div>
+
+        <h3>Event Details</h3>
+        <div class="form-group">
+            <label>Why do you want to participate?</label>
+         <select id="fest-why" required>
+                <option>Because it seems fun</option>
+                <option>Saw flyers</option>
+                <option>I don't know</option>
+                <option>Other</option>
