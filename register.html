@@ -484,86 +484,85 @@
 </div>
 
 <div class="modal-overlay" id="modal-ticket">
+    <div class="modal-overlay" id="modal-ticket">
     <div class="modal-content">
         <div class="status-icon">🎉</div>
-        <h2 style="color: var(--text-color); margin-bottom: 10px;">Registration Successful!</h2>
-        <p style="color: var(--text-muted);">See you at DIRA Tech Fest.</p>
+        <h2 style="color: var(--text-color); margin-bottom: 5px;">You're In!</h2>
+        <p style="color: var(--text-muted); font-size: 0.9rem;">Present this QR code at the entrance.</p>
         
-        <div class="seat-number">SEAT #<span id="seat-gen">000</span></div>
-        
-        <div style="min-height: 150px; display: flex; align-items: center; justify-content: center;">
-            <img src="" alt="QR Code" class="qr-code" id="qr-gen" style="display: none;">
-            <div id="qr-loading" style="font-size: 0.8rem; color: #888;">Generating QR...</div>
+        <div style="margin: 25px auto; position: relative; width: 180px; height: 180px; background: #fff; padding: 10px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+            <div id="qr-loading" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 0.8rem; color: #888;">Creating QR...</div>
+            <img src="" alt="Ticket QR" id="qr-gen" style="width: 100%; height: 100%; display: none; border-radius: 5px;">
+        </div>
+
+        <div style="font-size: 0.75rem; color: #aaa; text-transform: uppercase; letter-spacing: 1px;">
+            Reference ID: <span id="seat-gen">000</span>
         </div>
         
-        <p class="helper-text">Please save this QR code.</p>
+        <button class="submit-btn" style="margin-top: 20px; padding: 10px;" onclick="window.print()">Download / Print Ticket</button>
         <button class="close-modal" onclick="closeModal('modal-ticket')">Close</button>
     </div>
 </div>
 
 <script>
-    // 1. Initialize the page by showing the first form automatically
-    window.onload = () => {
-        const firstBtn = document.querySelector('.category-btn');
-        if(firstBtn) firstBtn.click();
-    };
+    // 1. Show the first form on page load
+    window.addEventListener('DOMContentLoaded', () => {
+        showForm('participant-training');
+    });
 
     function showForm(formId) {
-        const forms = document.querySelectorAll('.form-wrapper');
-        forms.forEach(form => {
+        // Hide all forms immediately for a snappy feel
+        document.querySelectorAll('.form-wrapper').forEach(form => {
             form.classList.remove('visible');
-            form.style.display = 'none'; 
+            form.style.display = 'none';
         });
 
-        const buttons = document.querySelectorAll('.category-btn');
-        buttons.forEach(btn => btn.classList.remove('active'));
-        
-        // Highlight active button
-        if(event && event.target) event.target.classList.add('active');
+        // Update active button state
+        document.querySelectorAll('.category-btn').forEach(btn => {
+            btn.classList.remove('active');
+            if(btn.getAttribute('onclick').includes(formId)) btn.classList.add('active');
+        });
 
         const targetForm = document.getElementById(formId);
         if(targetForm) {
             targetForm.style.display = 'block';
-            setTimeout(() => targetForm.classList.add('visible'), 10);
+            setTimeout(() => targetForm.classList.add('visible'), 50);
         }
     }
 
     function displayFileName(input) {
         const display = input.parentNode.querySelector('.file-name-display');
-        if (input.files && input.files[0]) {
-            display.textContent = "Selected: " + input.files[0].name;
+        if (input.files.length > 0) {
+            display.textContent = "📎 " + input.files[0].name;
         }
     }
 
     function handleSubmit(e, type) {
         e.preventDefault();
-        
         const btn = e.target.querySelector('button[type="submit"]');
-        const originalText = btn.textContent;
-        btn.textContent = "Processing...";
+        btn.textContent = "Generating Ticket...";
         btn.disabled = true;
 
         setTimeout(() => {
-            btn.textContent = originalText;
+            btn.textContent = "Submit";
             btn.disabled = false;
 
             if (type === 'ticket') {
-                const seat = Math.floor(Math.random() * 500) + 1;
-                const name = e.target.querySelector('input[type="text"]').value;
+                const seat = "DTF-" + Math.floor(1000 + Math.random() * 8999);
+                const nameInput = e.target.querySelector('input[type="text"]');
+                const userName = nameInput ? nameInput.value : "Guest";
+                
                 document.getElementById('seat-gen').textContent = seat;
                 
-                // Fix: Improved QR API call with encoded data
+                // QR Logic
                 const qrImg = document.getElementById('qr-gen');
                 const loader = document.getElementById('qr-loading');
-                const qrData = encodeURIComponent(`DIRA-FEST-2026|SEAT-${seat}|${name}`);
                 
-                qrImg.style.display = 'none';
-                loader.style.display = 'block';
+                // Encode data for the QR (ID and Name)
+                const qrData = encodeURIComponent(`ID:${seat}|Name:${userName}`);
+                qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${qrData}&color=6a11cb`;
                 
-                qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${qrData}`;
-                
-                // Show image once it has fully loaded
-                qrImg.onload = function() {
+                qrImg.onload = () => {
                     loader.style.display = 'none';
                     qrImg.style.display = 'block';
                 };
@@ -572,16 +571,11 @@
             } else {
                 openModal('modal-review');
             }
-        }, 1000); 
+        }, 1200);
     }
 
-    function openModal(id) {
-        document.getElementById(id).classList.add('active');
-    }
-
-    function closeModal(id) {
-        document.getElementById(id).classList.remove('active');
-    }
+    function openModal(id) { document.getElementById(id).classList.add('active'); }
+    function closeModal(id) { document.getElementById(id).classList.remove('active'); }
 </script>
 
 </body>
